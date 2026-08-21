@@ -202,3 +202,105 @@ def create_merit(merit: schemas.MeritCreate, db: Session = Depends(get_db)):
 @app.get("/api/merits/", response_model=List[schemas.Merit])
 def read_merits(db: Session = Depends(get_db)):
     return db.query(models.Merit).order_by(models.Merit.date.desc()).all()
+
+# --- Extra PUT / DELETE endpoints ---
+
+@app.put("/api/performances/{item_id}", response_model=schemas.Performance)
+def update_performance(item_id: int, item: schemas.PerformanceCreate, db: Session = Depends(get_db)):
+    db_item = db.query(models.Performance).filter(models.Performance.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Performance not found")
+    for key, value in item.dict().items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/api/performances/{item_id}")
+def delete_performance(item_id: int, db: Session = Depends(get_db)):
+    db_item = db.query(models.Performance).filter(models.Performance.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Performance not found")
+    db.delete(db_item)
+    db.commit()
+    return {"status": "deleted"}
+
+@app.put("/api/projects/{item_id}", response_model=schemas.Project)
+def update_project(item_id: str, item: schemas.ProjectCreate, db: Session = Depends(get_db)):
+    db_item = db.query(models.Project).filter(models.Project.project_id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Project not found")
+    for key, value in item.dict().items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/api/projects/{item_id}")
+def delete_project(item_id: str, db: Session = Depends(get_db)):
+    db_item = db.query(models.Project).filter(models.Project.project_id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Project not found")
+    db.delete(db_item)
+    db.commit()
+    return {"status": "deleted"}
+
+@app.put("/api/documents/{item_id}", response_model=schemas.Document)
+def update_document(item_id: int, item: schemas.DocumentCreate, db: Session = Depends(get_db)):
+    db_item = db.query(models.Document).filter(models.Document.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Document not found")
+    for key, value in item.dict().items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/api/documents/{item_id}")
+def delete_document(item_id: int, db: Session = Depends(get_db)):
+    db_item = db.query(models.Document).filter(models.Document.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Document not found")
+    db.delete(db_item)
+    db.commit()
+    return {"status": "deleted"}
+
+@app.put("/api/rules/{item_id}", response_model=schemas.Rule)
+def update_rule(item_id: int, item: schemas.RuleCreate, db: Session = Depends(get_db)):
+    db_item = db.query(models.Rule).filter(models.Rule.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    for key, value in item.dict().items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/api/rules/{item_id}")
+def delete_rule(item_id: int, db: Session = Depends(get_db)):
+    db_item = db.query(models.Rule).filter(models.Rule.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Rule not found")
+    db.delete(db_item)
+    db.commit()
+    return {"status": "deleted"}
+
+@app.put("/api/merits/{item_id}", response_model=schemas.Merit)
+def update_merit(item_id: int, item: schemas.MeritCreate, db: Session = Depends(get_db)):
+    db_item = db.query(models.Merit).filter(models.Merit.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Merit not found")
+    for key, value in item.dict().items():
+        setattr(db_item, key, value)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+@app.delete("/api/merits/{item_id}")
+def delete_merit(item_id: int, db: Session = Depends(get_db)):
+    db_item = db.query(models.Merit).filter(models.Merit.id == item_id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Merit not found")
+    db.delete(db_item)
+    db.commit()
+    return {"status": "deleted"}
