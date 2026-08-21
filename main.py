@@ -304,3 +304,14 @@ def delete_merit(item_id: int, db: Session = Depends(get_db)):
     db.delete(db_item)
     db.commit()
     return {"status": "deleted"}
+
+# Attempt to alter tables for missing columns (safe to fail if they exist)
+from sqlalchemy import text
+try:
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE projects ADD COLUMN IF NOT EXISTS description TEXT;"))
+        conn.execute(text("ALTER TABLE projects ADD COLUMN IF NOT EXISTS owner VARCHAR;"))
+        conn.execute(text("ALTER TABLE projects ADD COLUMN IF NOT EXISTS progress INTEGER;"))
+        conn.commit()
+except Exception as e:
+    print("Alter table failed (might already exist):", e)
