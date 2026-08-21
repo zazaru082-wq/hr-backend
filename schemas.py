@@ -1,60 +1,110 @@
-﻿from pydantic import BaseModel
-from typing import Optional, List
-from datetime import date, datetime
+
+from pydantic import BaseModel
+from typing import Optional
+from datetime import date
 
 class EmployeeBase(BaseModel):
-    person_id: str
-    title: str
-    first_name: str
-    last_name: str
-    nickname: Optional[str] = None
-    department: str
-    position: str
+    status: Optional[str] = None
+    gender: Optional[str] = None
+    title: Optional[str] = None
+    first_name: Optional[str] = None
+    monastic_name: Optional[str] = None
+    last_name: Optional[str] = None
+    dob: Optional[date] = None
+    age: Optional[int] = None
+    height: Optional[int] = None
     phone: Optional[str] = None
-    email: Optional[str] = None
-    status: str
-    type: str
+    line_id: Optional[str] = None
+    department: Optional[str] = None
+    date_joined: Optional[date] = None
+    tenure: Optional[str] = None
+    secular_edu: Optional[str] = None
+    dhamma_edu: Optional[str] = None
+    temple_work_history: Optional[str] = None
+    bank: Optional[str] = None
+    account_name: Optional[str] = None
+    account_number: Optional[str] = None
+    food_allergy: Optional[str] = None
+    drug_allergy: Optional[str] = None
+    disease: Optional[str] = None
+    other_health: Optional[str] = None
+    photo_url: Optional[str] = None
+    note: Optional[str] = None
 
 class EmployeeCreate(EmployeeBase):
+    person_id: str
+
+class EmployeeUpdate(EmployeeBase):
     pass
 
 class Employee(EmployeeBase):
+    person_id: str
+    last_updated: Optional[date] = None
+
     class Config:
         orm_mode = True
 
-class LeaveBase(BaseModel):
+from datetime import datetime
+
+class LeaveRequestBase(BaseModel):
     person_id: str
     leave_type: str
     start_date: date
     end_date: date
-    reason: str
+    reason: Optional[str] = None
     status: Optional[str] = "รออนุมัติ"
 
-class LeaveCreate(LeaveBase):
+class LeaveRequestCreate(LeaveRequestBase):
     pass
 
-class Leave(LeaveBase):
+class LeaveRequest(LeaveRequestBase):
     id: int
     created_at: datetime
+
     class Config:
         orm_mode = True
 
+
+# Schedule (เมนู 03)
 class ScheduleBase(BaseModel):
     date: date
-    time: str
-    title: str
-    details: Optional[str] = None
-    location: Optional[str] = None
+    time_str: str
+    topic: str
+    location: str
+    meal: Optional[str] = None
+    driver: Optional[str] = None
+    note: Optional[str] = None
+    status: Optional[str] = "กำลังดำเนินการ"
 
 class ScheduleCreate(ScheduleBase):
     pass
 
 class Schedule(ScheduleBase):
     id: int
-    created_at: datetime
     class Config:
         orm_mode = True
 
+# Performance (เมนู 04)
+class PerformanceBase(BaseModel):
+    person_id: str
+    project_id: Optional[str] = None
+    department: str
+    topic: str
+    activity: str
+    detail: Optional[str] = None
+    image_url: Optional[str] = None
+    link_url: Optional[str] = None
+    date: date
+
+class PerformanceCreate(PerformanceBase):
+    pass
+
+class Performance(PerformanceBase):
+    id: int
+    class Config:
+        orm_mode = True
+
+# Project (เมนู 05)
 class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -63,76 +113,57 @@ class ProjectBase(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     progress: Optional[int] = 0
-    status: Optional[str] = "กำลังดำเนินการ"
+    status: Optional[str] = "กำลังทำ"
 
 class ProjectCreate(ProjectBase):
     project_id: str
 
 class Project(ProjectBase):
     project_id: str
-    created_at: datetime
     class Config:
         orm_mode = True
 
+
+# Document (06)
 class DocumentBase(BaseModel):
-    doc_no: str
-    title: str
+    doc_id: str
     category: str
-    date: date
-    status: Optional[str] = "ใช้งาน"
+    name: str
+    link_url: Optional[str] = None
 
 class DocumentCreate(DocumentBase):
     pass
 
 class Document(DocumentBase):
     id: int
-    created_at: datetime
     class Config:
         orm_mode = True
 
+# Rule (07)
 class RuleBase(BaseModel):
-    category: str
-    title: str
-    content: str
+    keyword: str
+    description: str
 
 class RuleCreate(RuleBase):
     pass
 
 class Rule(RuleBase):
     id: int
-    created_at: datetime
     class Config:
         orm_mode = True
 
+# Merit (08)
 class MeritBase(BaseModel):
-    person_id: str
-    department: str
+    title: str
+    merit_type: str
     date: date
-    activity: str
-    hours: float
+    location: Optional[str] = None
+    image_url: Optional[str] = None
 
 class MeritCreate(MeritBase):
     pass
 
 class Merit(MeritBase):
     id: int
-    created_at: datetime
-    class Config:
-        orm_mode = True
-
-class PerformanceBase(BaseModel):
-    person_id: str
-    department: str
-    topic: str
-    activity: str
-    date: date
-    image_url: Optional[str] = None
-
-class PerformanceCreate(PerformanceBase):
-    pass
-
-class Performance(PerformanceBase):
-    id: int
-    created_at: datetime
     class Config:
         orm_mode = True

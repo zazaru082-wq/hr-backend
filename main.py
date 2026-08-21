@@ -1,4 +1,4 @@
-
+﻿
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -27,9 +27,9 @@ app.add_middleware(
 def read_root():
     return {"message": "Welcome to Niramitsilp Fund API"}
 
-# ----- 01 บุคลากร (Employees) -----
+# ----- 01 เธเธธเธเธฅเธฒเธเธฃ (Employees) -----
 @app.post("/api/employees/", response_model=schemas.Employee)
-def create_employee(employee: schemas.EmployeeCreate, db: Session = Depends(get_db)):
+def create_employee(employee: schemas.EmployeeUpdate, db: Session = Depends(get_db)):
     db_emp = db.query(models.Employee).filter(models.Employee.person_id == employee.person_id).first()
     if db_emp:
         raise HTTPException(status_code=400, detail="Person ID already registered")
@@ -77,7 +77,7 @@ def delete_employee(person_id: str, db: Session = Depends(get_db)):
     return {"message": "Deleted successfully"}
 
 
-# ----- 02 วันลา (Leave Management) -----
+# ----- 02 เธงเธฑเธเธฅเธฒ (Leave Management) -----
 @app.post("/api/leaves/", response_model=schemas.LeaveRequest)
 def create_leave(leave: schemas.LeaveRequestCreate, db: Session = Depends(get_db)):
     db_leave = models.LeaveRequest(**leave.dict())
@@ -101,7 +101,7 @@ def update_leave_status(leave_id: int, status: str, db: Session = Depends(get_db
     return db_leave
 
 
-# ----- 03 คิวหัวหน้า (Schedules) -----
+# ----- 03 เธเธดเธงเธซเธฑเธงเธซเธเนเธฒ (Schedules) -----
 @app.post("/api/schedules/", response_model=schemas.Schedule)
 def create_schedule(sched: schemas.ScheduleCreate, db: Session = Depends(get_db)):
     db_sched = models.Schedule(**sched.dict())
@@ -134,7 +134,7 @@ def delete_schedule(schedule_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Schedule deleted successfully"}
 
-# ----- 04 ผลงาน (Performances) -----
+# ----- 04 เธเธฅเธเธฒเธ (Performances) -----
 @app.post("/api/performances/", response_model=schemas.Performance)
 def create_performance(perf: schemas.PerformanceCreate, db: Session = Depends(get_db)):
     db_perf = models.Performance(**perf.dict())
@@ -147,7 +147,7 @@ def create_performance(perf: schemas.PerformanceCreate, db: Session = Depends(ge
 def read_performances(db: Session = Depends(get_db)):
     return db.query(models.Performance).order_by(models.Performance.date.desc()).all()
 
-# ----- 05 โครงการ (Projects) -----
+# ----- 05 เนเธเธฃเธเธเธฒเธฃ (Projects) -----
 @app.post("/api/projects/", response_model=schemas.Project)
 def create_project(proj: schemas.ProjectCreate, db: Session = Depends(get_db)):
     db_proj = models.Project(**proj.dict())
@@ -161,7 +161,7 @@ def read_projects(db: Session = Depends(get_db)):
     return db.query(models.Project).all()
 
 
-# ----- 06 เอกสารสำคัญ (Documents) -----
+# ----- 06 เน€เธญเธเธชเธฒเธฃเธชเธณเธเธฑเธ (Documents) -----
 @app.post("/api/documents/", response_model=schemas.Document)
 def create_document(doc: schemas.DocumentCreate, db: Session = Depends(get_db)):
     db_doc = models.Document(**doc.dict())
@@ -174,7 +174,7 @@ def create_document(doc: schemas.DocumentCreate, db: Session = Depends(get_db)):
 def read_documents(db: Session = Depends(get_db)):
     return db.query(models.Document).all()
 
-# ----- 07 กติกา (Rules) -----
+# ----- 07 เธเธ•เธดเธเธฒ (Rules) -----
 @app.post("/api/rules/", response_model=schemas.Rule)
 def create_rule(rule: schemas.RuleCreate, db: Session = Depends(get_db)):
     db_rule = models.Rule(**rule.dict())
@@ -190,7 +190,7 @@ def read_rules(search: str = None, db: Session = Depends(get_db)):
         query = query.filter(models.Rule.keyword.ilike(f"%{search}%") | models.Rule.description.ilike(f"%{search}%"))
     return query.all()
 
-# ----- 08 ทบทวนบุญ (Merits) -----
+# ----- 08 เธ—เธเธ—เธงเธเธเธธเธ (Merits) -----
 @app.post("/api/merits/", response_model=schemas.Merit)
 def create_merit(merit: schemas.MeritCreate, db: Session = Depends(get_db)):
     db_merit = models.Merit(**merit.dict())
